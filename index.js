@@ -9,18 +9,19 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
-
 app.use("/api/links", linkRoutes);
 
-const PORT = process.env.PORT || 3000;
+// MongoDB connection caching for serverless
+let isConnected = false;
+async function connectDB() {
+  if (isConnected) return;
+  await mongoose.connect(process.env.MONGO_URI);
+  isConnected = true;
+  console.log("MongoDB Connected");
+}
 
-// Connect to MongoDB
-mongoose
-  .connect(process.env.MONGO_URI)
-  .then(() => {
-    console.log("MongoDB Connected");
-    app.listen(PORT, () =>
-      console.log(`Server running on ${PORT}`)
-    );
-  })
-  .catch((err) => console.log(err));
+// Vercel expects an exported handler
+export default async function handler(req, res) {
+  await connectDB();
+  return app(req, res);
+}
