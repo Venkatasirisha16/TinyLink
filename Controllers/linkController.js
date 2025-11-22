@@ -4,7 +4,7 @@ import {
   getLinkByCode,
   deleteLink,
 } from "../Services/linkService.js";
-import isValidUrl from "../Utils/isValidUrl.js";
+
 import { checkURLHealth } from "../Utils/healthCheck.js";
 
 export async function createLink(req, res) {
@@ -13,12 +13,6 @@ export async function createLink(req, res) {
 
     if (!url) {
       return res.status(400).json({ message: "url is required" });
-    }
-
-    if (!isValidUrl(url)) {
-      return res.status(400).json({
-        message: "Invalid URL. Example: https://example.com",
-      });
     }
 
     const link = await createShortLink(url, code);
