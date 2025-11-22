@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import { connectDB } from "./Config/db.js";
 import linkRoutes from "./routes/linkRoutes.js";
+import redirectRoute from "./routes/redirectRoute.js";
 
 dotenv.config();
 
@@ -11,8 +12,8 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/api/links", linkRoutes);
+app.use("", redirectRoute);
 
-// Vercel handler
 export default async function handler(req, res) {
   await connectDB();
   return app(req, res);
